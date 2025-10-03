@@ -12,6 +12,8 @@
 ; c = n / (n + k)
 (= (confidence $n $k)
    (/ $n (+ $n $k)))
+
+(= (k) 0.5)
    
 ;;; Non-Axiomatic Reasoning System (NARS)
 
@@ -52,12 +54,12 @@
 ; (= (nars-induction-freq f1 f2) f1)
 (= (nars_freqI $f1 $f2) $f1)
 
-(= (nars_confI $f1 $f2 $c1 $c2 $k)
-   (/ 1 (+ 1 (/ $k (* $f2 (* $c1 $c2))))))
+(= (nars_confI $f1 $f2 $c1 $c2)
+   (/ 1 (+ 1 (/ (k) (* $f2 (* $c1 $c2))))))
    
-(= (nars_powerI $f1 $f2 $c1 $c2 $k)
+(= (nars_powerI $f1 $f2 $c1 $c2)
    (* (nars_freqI $f1 $f2)
-      (nars_confI $f1 $f2 $c1 $c2 $k)))
+      (nars_confI $f1 $f2 $c1 $c2)))
 
 
 
@@ -75,12 +77,12 @@
 ; (= (nars-abduction-freq f1 f2) f2)
 (= (nars_freqA $f1 $f2) $f2)
 
-(= (nars_confA $f1 $f2 $c1 $c2 $k)
-   (/ 1 (+ 1 (/ $k (* $f1 (* $c1 $c2))))))
+(= (nars_confA $f1 $f2 $c1 $c2)
+   (/ 1 (+ 1 (/ (k) (* $f1 (* $c1 $c2))))))
 
-(= (nars_powerA $f1 $f2 $c1 $c2 $k)
+(= (nars_powerA $f1 $f2 $c1 $c2)
    (* (nars_freqA $f1 $f2)
-      (nars_confA $f1 $f2 $c1 $c2 $k)))
+      (nars_confA $f1 $f2 $c1 $c2)))
 
 
 ;;; Probabilistic Logic Networks (PLN)
@@ -164,3 +166,12 @@
                        (- $s_C (* $s_CB $s_C)))
                     (- 1 $s_B))))
       (+ $part1 $part2)))
+
+
+; cAC ≈ cAB * cCB Abduction approx.
+; cAC ≈cBA * cBC Induction approx.
+; cAC ≈ cAB * cBC Deduction approx.
+
+; for confidence calculation in PLN, we use the approx. formulas
+(= (pln_conf $c1 $c2)
+   (* $c1 $c2))
